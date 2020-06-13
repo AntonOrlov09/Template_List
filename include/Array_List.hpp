@@ -112,7 +112,7 @@ public:
     }
     void RemoveAll() {
         last_index_=-1;
-         capacity_=0;
+         capacity_=2;
          size_=0;
         delete(array_);
         array_ = new T[capacity_];

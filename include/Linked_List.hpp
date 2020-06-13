@@ -18,8 +18,69 @@ class Linked_List {
     Node<T> *tail_ = nullptr; // указатель на хвост списка
     // если нужно, то добавьте дополнительные поля
 public:
-    explicit Linked_List() : head_(nullptr), tail_(nullptr) {}
+    class Iterator {
+        Node<T>* ptr_;
+    public:
+        // конструктор
+        explicit Iterator(Node<T>* ptr) : ptr_(ptr) {}
 
+        const Iterator operator++(){
+            ptr_=ptr_->next_;
+            return *this;
+        }
+        Iterator operator++(int junk){
+            Iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+        T& operator*(){
+                return ptr_->value_;
+        }
+        T* operator->(){
+            return &ptr_->value_;
+        }
+        bool operator==(const Iterator& rhs){
+            return rhs.ptr_ == ptr_;
+        }
+        bool operator!=(const Iterator& rhs){
+            return rhs.ptr_ != ptr_;
+        }
+    };
+    explicit Linked_List() : head_(nullptr), tail_(nullptr) {}
+    // Конструктор копирования
+    Linked_List (const Linked_List<T> &that) {
+        if (that.Length() > 0){
+            for (int i=0; i<that.Length(); i++){
+                Append(that[i]);
+            }
+        }
+//        else{
+//            head_= nullptr;
+//            tail_= nullptr;
+//        }
+    }
+    // Конструктор инициализации
+    Linked_List(std::initializer_list<T> elements) {
+        for (auto& element: elements) {
+            Append(element);
+        }
+    }
+
+    // оператор присваиваения копированием
+    Linked_List<T> &operator=(const Linked_List<T> &that) {
+        if (this != &that) {
+            auto tmp = head_;
+            while (tmp != nullptr) {
+                tmp = tmp->next_;
+                delete(head_);
+                head_ = tmp;
+            }
+            for (int i = 0; i<that.Length();i++) {
+                Append(that[i]);
+            }
+        }
+        return *this;
+    }
 
     void Append(T value) {
         Node<T> *tmp = new Node<T>;
@@ -144,6 +205,12 @@ public:
             tmp = tmp->next_;
         }
         return tmp->value_;
+    }
+    Iterator begin() const {
+        return Iterator(head_);
+    }
+    Iterator end() const {
+        return Iterator(tail_->next_);
     }
     ~Linked_List() {
         auto tmp = head_;
