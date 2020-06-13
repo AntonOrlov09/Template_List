@@ -54,10 +54,6 @@ public:
                 Append(that[i]);
             }
         }
-//        else{
-//            head_= nullptr;
-//            tail_= nullptr;
-//        }
     }
     // Конструктор инициализации
     Linked_List(std::initializer_list<T> elements) {
